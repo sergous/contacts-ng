@@ -1,7 +1,6 @@
 var express = require('express'),
-    api = require('./public/src/api'),
+    api = require('./api'),
     app = express();
-
 
 app
     .use(express.static('./public'))
