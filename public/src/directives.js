@@ -80,7 +80,7 @@ angular.module('ContactsApp')
                     if (form.newField.$valid) {
                         $scope.record[$filter('camelCase')($scope.field.name)] = [$scope.field.value, $scope.field.type];
                         $scope.remove();
-                        if ($scope.live) {
+                        if ($scope.live !== 'false') {
                             $scope.record.$update(function (updatedRecord) {
                                 $scope.record = updatedRecord;
                             });
