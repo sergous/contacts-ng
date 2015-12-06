@@ -16,8 +16,7 @@
         </div>
     </div>
 
-    <!--TODO: fix error on ng-messages="{{field}}.$error"-->
-    <div class="col-sm-4 has-error" ng-show="{{field}}.$dirty && {{field}}.$invalid" ng-messages="field.$error">
+    <div class="col-sm-4 has-error" ng-show="{{field}}.$dirty && {{field}}.$invalid" ng-messages="this.$eval(field)['$error']">
         <p class="control-label" ng-message="required">{{ field | labelCase }} is required.</p>
         <p class="control-label" ng-repeat="(k, v) in types" ng-message="{{k}}">{{ field | labelCase }} {{v[1]}}</p>
     </div>

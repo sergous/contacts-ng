@@ -35,8 +35,9 @@ angular.module('ContactsApp')
                                     $scope.blurUpdate();
                             };
 
+                            //add to field live="true" for save field value on blur
                             $scope.blurUpdate = function () {
-                                    if ($scope.live !== 'false') {
+                                    if ($scope.live) {
                                             $scope.record.$update(function (updatedRecord) {
                                                     $scope.record = updatedRecord;
                                             });
