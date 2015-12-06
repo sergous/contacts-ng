@@ -11,4 +11,44 @@ angular.module('ContactsApp')
         url: ['URL', 'should be a URL'],
         tel: ['Phone Number', 'should be a phone number'],
         color: ['Color', 'should be a color']
+    })
+    .directive('formField', function ($timeout, FieldTypes) {
+            return {
+                    restrict: 'EA',
+                    templateUrl: 'views/form-field.html',
+                    replace: true,
+                    scope: {
+                            record: '=',
+                            field: '@',
+                            live: '@',
+                            required: '@'
+                    },
+                    link: function ($scope, element, attr) {
+                            $scope.$on('record:invalid', function () {
+                                    $scope[$scope.field].$setDirty();
+                            });
+
+                            $scope.types = FieldTypes;
+
+                            $scope.remove = function (field) {
+                                    delete $scope.record[field];
+                                    $scope.blurUpdate();
+                            };
+
+                            $scope.blurUpdate = function () {
+                                    if ($scope.live !== 'false') {
+                                            $scope.record.$update(function (updatedRecord) {
+                                                    $scope.record = updatedRecord;
+                                            });
+                                    }
+                            };
+
+                            var saveTimeOut;
+
+                            $scope.update = function () {
+                                    $timeout.cancel(saveTimeOut);
+                                    saveTimeOut = $timeout($scope.blurUpdate, 1000);
+                            };
+                    }
+            }
     });
