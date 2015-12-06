@@ -37,7 +37,7 @@ angular.module('ContactsApp')
 
                             //add to field live="true" for save field value on blur
                             $scope.blurUpdate = function () {
-                                    if ($scope.live) {
+                                    if ($scope.live !== 'false') {
                                             $scope.record.$update(function (updatedRecord) {
                                                     $scope.record = updatedRecord;
                                             });
@@ -52,4 +52,42 @@ angular.module('ContactsApp')
                             };
                     }
             }
-    });
+    })
+    .directive('newField', function ($filter, FieldTypes) {
+        return {
+            restrict: 'EA',
+            templateUrl: 'views/new-field.html',
+            replace: true,
+            scope: {
+                record: '=',
+                live: '@'
+            },
+            require: '^form',
+            link: function ($scope, element, attr, form) {
+                $scope.types = FieldTypes;
+                $scope.field = {};
+                $scope.show = function (type) {
+                    $scope.field.type = type;
+                    $scope.display = true;
+                };
+
+                $scope.remove = function () {
+                    $scope.field = {};
+                    $scope.display = false;
+                };
+
+                $scope.add = function () {
+                    if (form.newField.$valid) {
+                        $scope.record[$filter('camelCase')($scope.field.name)] = [$scope.field.value, $scope.field.type];
+                        $scope.remove();
+                        if ($scope.live) {
+                            $scope.record.$update(function (updatedRecord) {
+                                $scope.record = updatedRecord;
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    })
+;
