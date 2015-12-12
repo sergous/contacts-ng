@@ -73,10 +73,23 @@ router
         }
     })
     .post('/options/displayed_fields', function (req, res) {
-        req.user.options.displayed_fields = req.body.fields;
-        db.update({ id: req.user.id }, req.user, function (err, data) {
-            res.json(data[0].options.displayed_fields);
-        });
+        //TODO: fix workaroud of not existing req.user
+        if (req.user) {
+            req.user.options.displayed_fields = req.body.fields;
+            db.update({id: req.user.id}, req.user, function (err, data) {
+                res.json(data[0].options.displayed_fields);
+            });
+        } else {
+            if (req.session.userId) {
+                db.findOne({ id: req.session.userId }, function (err, data) {
+                    req.user.options.displayed_fields = req.body.fields;
+                    db.update({id: req.user.id}, req.user, function (err, data) {
+                        res.json(data[0].options.displayed_fields);
+                    });
+                });
+            } else res.json({});
+        }
+        // TODO_END
     });
 
 module.exports = router;

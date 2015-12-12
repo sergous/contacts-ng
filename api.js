@@ -9,9 +9,21 @@ router
     .use(bodyParser.json())
     .route('/contact')
         .get(function (req, res) {
-            db.find({userId: parseInt(req.user.id, 10)}, function (err, data) {
-                res.json(data);
-            });
+            // TODO: fix workaround of not existing user.id
+            if (req.user) {
+                db.find({userId: parseInt(req.user.id, 10)}, function (err, data) {
+                    res.json(data);
+                });
+            } else if (req.session.userId) {
+                    db.find({ userId: req.session.userId }, function (err, data) {
+                        res.json(data);
+                    });
+            } else {
+                db.find({userId: parseInt(1, 10)}, function (err, data) {
+                    res.json(data);
+                });
+            }
+            // TODO_END
         })
         .post(function (req, res) {
             var contact = req.body;
