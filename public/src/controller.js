@@ -46,4 +46,14 @@ angular.module('ContactsApp')
             $location.url('/contacts');
         };
     })
+    .controller('SettingsController', function ($scope, $rootScope, options, Fields) {
+        $rootScope.PAGE = 'settings';
+        $scope.allFields = [];
+        $scope.fields = options.displayed_fields;
+
+        Fields.headers().then(function (data) {
+            $scope.allFields = data;
+        });
+
+    })
 ;
